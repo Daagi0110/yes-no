@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    font-family: Georgia, "Times New Roman", serif;
+    background: #fff7fa;
+    color: #873d59;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    background:
+        radial-gradient(circle at 50% 20%, #ffffff, transparent 55%),
+        linear-gradient(145deg, #fff8fa, #ffe5ed);
+}
+
+.page {
+    width: min(100%, 460px);
+    text-align: center;
+    animation: pageIn 1s ease both;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+        filter: blur(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* ЭХНИЙ ДЭЛГЭЦ */
+
+.cat {
+    width: 145px;
+    height: 130px;
+    margin: 0 auto 16px;
+    position: relative;
+}
+
+.cat svg {
+    width: 100%;
+    height: 100%;
+}
+
+.cat-heart {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 25px;
+    animation: heartbeat 1s infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.main-question {
+    font-family: Arial, sans-serif;
+    color: #bd3453;
+    font-size: clamp(21px, 5vw, 28px);
+    margin: 12px 0 27px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    min-height: 60px;
+}
+
+.btn {
+    min-width: 100px;
+    padding: 13px 24px;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 5px 16px #ad52722c;
+    transition:
+        transform .35s ease,
+        opacity .35s ease,
+        box-shadow .3s ease;
+}
+
+.btn:active {
+    transform: scale(.95);
+}
+
+.yes-btn {
+    background: linear-gradient(135deg, #54cba5, #30a983);
+}
+
+.no-btn {
+    background: linear-gradient(135deg, #d84c63, #a52840);
+    transform-origin: center;
+}
+
+.hint {
+    margin-top: 25px;
+    color: #c68a9e;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+/* ШИНЭ АСУУЛТЫН ДЭЛГЭЦ */
+
+.message-icon {
+    font-size: 60px;
+    margin-bottom: 22px;
+    animation: heartbeat 1.6s infinite;
+}
+
+.eyebrow {
+    color: #c17b96;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.message-title {
+    color: #a83d62;
+    font-size: clamp(31px, 7vw, 43px);
+    font-weight: normal;
+    margin-bottom: 20px;
+    text-shadow: 0 3px 18px #e6a5bd66;
+}
+
+.message-text {
+    color: #794258;
+    font-size: clamp(17px, 4.5vw, 21px);
+    line-height: 1.8;
+    margin-bottom: 32px;
+}
+
+.decorative-line {
+    width: 110px;
+    height: 1px;
+    margin: 0 auto 25px;
+    background: linear-gradient(90deg, transparent, #ce8aa4, transparent);
+}
+
+.soft-btn {
+    min-width: 175px;
+    padding: 15px 25px;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 16px;
+    background: linear-gradient(135deg, #db8eaa, #b84e77);
+    box-shadow: 0 8px 25px #bd527735;
+    transition: transform .3s, box-shadow .3s;
+}
+
+.soft-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px #bd527755;
+}
+
+.small-note {
+    margin-top: 22px;
+    color: #c18da0;
+    font-size: 12px;
+}
+
+/* ВИДЕО */
+
+#videoScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+#videoScreen video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+
+.video-error {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 25px;
+    text-align: center;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    display: none;
+}
+
+/* ШҮЛГИЙН ДЭЛГЭЦ */
+
+#poemScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background:
+        radial-gradient(ellipse at 50% 15%, #fffdfb 0%, transparent 60%),
+        linear-gradient(145deg, #fff6f8, #f9dbe5 55%, #f4c6d6);
+    animation: backgroundAppear 1.8s ease both;
+}
+
+@keyframes backgroundAppear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.poem-border {
+    position: fixed;
+    inset: 12px;
+    border: 1px solid #d9a0b6;
+    border-radius: 20px;
+    box-shadow: inset 0 0 35px #ffffff80;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.poem-content {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 760px);
+    min-height: 100%;
+    margin: auto;
+    padding: 45px 24px 38px;
+    text-align: center;
+}
+
+.poem-heart {
+    font-size: 37px;
+    margin-bottom: 12px;
+    animation: heartbeat 1.7s infinite;
+}
+
+.poem-heading {
+    color: #a83d62;
+    font-size: clamp(37px, 8vw, 53px);
+    font-weight: normal;
+    letter-spacing: 5px;
+    text-shadow: 0 3px 20px #d98da966;
+    margin-bottom: 13px;
+}
+
+.poem-subtitle {
+    color: #bd8298;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+}
+
+.poem-ornament {
+    color: #c57d98;
+    margin-bottom: 27px;
+    font-size: 18px;
+}
+
+.stanza {
+    margin-bottom: 24px;
+}
+
+.poem-line {
+    font-size: clamp(15px, 3.7vw, 20px);
+    line-height: 1.9;
+    color: #71344c;
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(5px);
+    animation: revealLine 1.15s ease forwards;
+}
+
+@keyframes revealLine {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.poem-ending {
+    margin: 29px 0 20px;
+    color: #ad4568;
+    font-size: clamp(16px, 4vw, 21px);
+    font-style: italic;
+    line-height: 1.8;
+    opacity: 0;
+    animation: revealLine 1.5s ease forwards;
+    animation-delay: 5.4s;
+}
+
+.chat-message {
+    margin-top: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #d9a0b680;
+    color: #a34769;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    letter-spacing: .4px;
+    opacity: 0;
+    animation: revealLine 1.5s ease forwards;
+    animation-delay: 6.2s;
+}
+
+.footer-hearts {
+    margin-top: 16px;
+    color: #c16d8c;
+    letter-spacing: 9px;
+    opacity: 0;
+    animation: revealLine 1.5s ease forwards;
+    animation-delay: 6.7s;
+}
+
+/* ХӨВӨХ ЗҮРХ */
+
+.floating-heart {
+    position: fixed;
+    z-index: 3;
+    bottom: -40px;
+    pointer-events: none;
+    opacity: 0;
+    animation: floatHeart linear forwards;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) rotate(0) scale(.7);
+        opacity: 0;
+    }
+    15% { opacity: .7; }
+    85% { opacity: .65; }
+    100% {
+        transform: translateY(-115vh) rotate(35deg) scale(1.2);
+        opacity: 0;
+    }
+}
+
+@media (max-height: 700px) {
+    .poem-content {
+        padding-top: 30px;
+    }
+
+    .stanza {
+        margin-bottom: 15px;
+    }
+
+    .poem-line {
+        line-height: 1.7;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+    <main class="page" id="firstPage">
+
+        <div class="cat">
+            <svg viewBox="0 0 160 140"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M39 48 L34 18 L61 35
+                         M99 35 L126 18 L121 49"
+                      fill="#fff" stroke="#39343b"
+                      stroke-width="3.5"
+                      stroke-linejoin="round"/>
+
+                <path d="M38 39
+                         Q28 39 30 57
+                         L34 91
+                         Q38 115 61 116
+                         L99 116
+                         Q122 113 126 91
+                         L130 57
+                         Q132 39 121 39
+                         Q109 34 98 35
+                         L61 35
+                         Q49 34 38 39Z"
+                      fill="#fff" stroke="#39343b"
+                      stroke-width="3.5"/>
+
+                <ellipse cx="59" cy="66" rx="4" ry="6" fill="#39343b"/>
+                <ellipse cx="101" cy="66" rx="4" ry="6" fill="#39343b"/>
+
+                <ellipse cx="45" cy="79" rx="9" ry="5"
+                         fill="#ffb4c3" opacity=".8"/>
+                <ellipse cx="115" cy="79" rx="9" ry="5"
+                         fill="#ffb4c3" opacity=".8"/>
+
+                <path d="M76 76 Q80 72 84 76 Q80 82 76 76Z"
+                      fill="#e987a1"/>
+
+                <path d="M80 81 Q74 89 68 83
+                         M80 81 Q86 89 92 83"
+                      fill="none" stroke="#39343b"
+                      stroke-width="2.5" stroke-linecap="round"/>
+
+                <path d="M48 88 L24 83 M48 94 L24 96
+                         M112 88 L136 83 M112 94 L136 96"
+                      stroke="#39343b" stroke-width="1.7"
+                      stroke-linecap="round" fill="none"/>
+
+                <path d="M53 112 Q46 127 62 127
+                         Q69 127 70 117
+                         M90 117 Q91 127 99 127
+                         Q114 127 107 112"
+                      fill="#fff" stroke="#39343b" stroke-width="3"/>
+            </svg>
+            <span class="cat-heart">❤️</span>
+        </div>
+
+        <h1 class="main-question" id="question">
+            Do you love me? ❤️
+        </h1>
+
+        <div class="buttons" id="initialButtons">
+            <button class="btn yes-btn" id="yesButton">YES</button>
+            <button class="btn no-btn" id="noButton">NO</button>
+        </div>
+
+        <p class="hint">Choose honestly... 💗</p>
+    </main>
+</div>
+
+<script>
+// ========================================
+// ВИДЕОНЫХОО ФАЙЛЫН НЭРИЙГ ЭНД ТОХИРУУЛНА
+// HTML болон видео нэг хавтсанд байна.
+// ========================================
+const VIDEO_URL = "video.mp4";
+
+const app = document.getElementById("app");
+const question = document.getElementById("question");
+const yesButton = document.getElementById("yesButton");
+const noButton = document.getElementById("noButton");
+
+let noCount = 0;
+let stage = "question";
+let heartInterval = null;
+
+const noMessages = [
+    "Do you love me? ❤️",
+    "Are you sure? 🥺",
+    "Really sure? 💔",
+    "Please reconsider 😭",
+    "Don't do this to me 🥹",
+    "One last chance! ❤️",
+    "Pretty please? 🥺"
+];
+
+// NO дарах бүрд жижигрүүлнэ.
+noButton.addEventListener("click", () => {
+    if (stage !== "question") return;
+
+    noCount++;
+
+    question.textContent =
+        noMessages[Math.min(noCount, noMessages.length - 1)];
+
+    const noScale = Math.max(0, 1 - noCount / 7);
+    const yesScale = 1 + noCount * 0.38;
+
+    noButton.style.transform = `scale(${noScale})`;
+    noButton.style.opacity = String(noScale);
+    yesButton.style.transform = `scale(${yesScale})`;
+
+    if (noCount >= 7) {
+        noButton.style.display = "none";
+        yesButton.style.position = "fixed";
+        yesButton.style.inset = "0";
+        yesButton.style.width = "100vw";
+        yesButton.style.height = "100vh";
+        yesButton.style.height = "100dvh";
+        yesButton.style.borderRadius = "0";
+        yesButton.style.fontSize = "clamp(45px, 12vw, 100px)";
+        yesButton.style.zIndex = "10";
+        yesButton.style.transform = "none";
+        yesButton.style.boxShadow = "none";
+
+        question.style.position = "fixed";
+        question.style.top = "8%";
+        question.style.left = "0";
+        question.style.width = "100%";
+        question.style.padding = "0 15px";
+        question.style.zIndex = "11";
+        question.style.color = "#fff";
+        question.textContent = "You know you love me! ❤️";
+
+        document.querySelector(".cat").style.display = "none";
+        document.querySelector(".hint").style.display = "none";
+    }
+});
+
+// YES эхний удаа дарахад Thank you дэлгэц.
+yesButton.addEventListener("click", () => {
+    if (stage !== "question") return;
+
+    stage = "thankyou";
+    showThankYou();
+});
+
+function showThankYou() {
+    app.innerHTML = `
+        <main class="page">
+            <div class="message-icon">💗</div>
+
+            <p class="eyebrow">A little something for you</p>
+
+            <h1 class="message-title">Thank you ❤️</h1>
+
+            <div class="decorative-line"></div>
+
+            <p class="message-text">
+                Чамд зориулсан нэг видео байна.<br>
+                Үзэх үү? 🎬💕
+            </p>
+
+            <button class="soft-btn" id="watchButton">
+                Тийм ❤️
+            </button>
+
+            <p class="small-note">Made with love, just for you</p>
+        </main>
+    `;
+
+    document.getElementById("watchButton")
+        .addEventListener("click", playVideo);
+}
+
+// Видео тоглуулах.
+function playVideo() {
+    if (stage !== "thankyou") return;
+
+    stage = "video";
+
+    const videoScreen = document.createElement("div");
+    videoScreen.id = "videoScreen";
+
+    const video = document.createElement("video");
+    video.src = VIDEO_URL;
+    video.controls = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.preload = "auto";
+
+    const error = document.createElement("div");
+    error.className = "video-error";
+    error.innerHTML =
+        "Видео тоглож чадсангүй.<br>video.mp4 файлын нэр, байршлыг шалгана уу.";
+
+    videoScreen.appendChild(video);
+    videoScreen.appendChild(error);
+    document.body.appendChild(videoScreen);
+
+    // Видео бүрэн дуусахад дараагийн асуулт гарна.
+    video.addEventListener("ended", () => {
+        videoScreen.remove();
+        showPoemInvitation();
+    });
+
+    video.addEventListener("error", () => {
+        error.style.display = "block";
+    });
+
+    video.play().catch(() => {
+        error.style.display = "block";
+        error.innerHTML =
+            "Видеог эхлүүлэхийн тулд дэлгэц дээрх тоглуулах товчийг дарна уу.";
+    });
+}
+
+// Видео дууссаны дараах хоёр дахь асуулт.
+function showPoemInvitation() {
+    if (stage !== "video") return;
+
+    stage = "poemInvitation";
+
+    app.innerHTML = `
+        <main class="page">
+            <div class="message-icon">💌</div>
+
+            <p class="eyebrow">One more little surprise</p>
+
+            <h1 class="message-title">
+                
+            </h1>
+
+            <div class="decorative-line"></div>
+
+            <p class="message-text">
+                Чамд зориулсан нэгэн шүлгийг
+                хүлээн авна уу. 🌷
+            </p>
+
+            <button class="soft-btn" id="poemButton">
+                Тийм ❤️
+            </button>
+
+            <p class="small-note">
+                Энэ шүлэг  чамдaa зориулсан
+            </p>
+        </main>
+    `;
+
+    document.getElementById("poemButton")
+        .addEventListener("click", showPoem);
+}
+
+// Шүлгийг гоёмсог анимейшнтай харуулах.
+function showPoem() {
+    if (stage !== "poemInvitation") return;
+
+    stage = "poem";
+
+    app.innerHTML = "";
+
+    const poemScreen = document.createElement("section");
+    poemScreen.id = "poemScreen";
+
+    poemScreen.innerHTML = `
+        <div class="poem-border"></div>
+
+        <article class="poem-content">
+            <div class="poem-heart">♡</div>
+
+            <h1 class="poem-heading">Чи минь</h1>
+
+            <p class="poem-subtitle">
+                
+            </p>
+
+            <div class="poem-ornament">✧ ── ♡ ── ✧</div>
+
+            <div class="stanza">
+                <p class="poem-line" style="animation-delay: .7s">
+                    Чимээгүй үдэш чамайг бодоход
+                </p>
+                <p class="poem-line" style="animation-delay: 1.2s">
+                    Чиний инээмсэглэл саран шиг тодорно.
+                </p>
+                <p class="poem-line" style="animation-delay: 1.7s">
+                    Хорвоо тэр чигтээ нам гүм болсон ч
+                </p>
+                <p class="poem-line" style="animation-delay: 2.2s">
+                    Хонгор чиний минь дүр сэтгэлд эгшиглэнэ.
+                </p>
+            </div>
+
+            <div class="stanza">
+                <p class="poem-line" style="animation-delay: 2.8s">
+                    Чамайг хайрлана гэдэг минь
+                </p>
+                <p class="poem-line" style="animation-delay: 3.3s">
+                    Цэцэг дэлгэрэхийг чимээгүй хүлээх шиг,
+                </p>
+                <p class="poem-line" style="animation-delay: 3.8s">
+                    Хол байсан ч зүрхэндээ тээж,
+                </p>
+                <p class="poem-line" style="animation-delay: 4.3s">
+                    Хорвоог чамаар илүү сайхан харах шиг.
+                </p>
+            </div>
+
+            <div class="stanza">
+                <p class="poem-line" style="animation-delay: 4.9s">
+                    Хэрэв надаас аз жаргал гэж юу вэ гэвэл
+                </p>
+                <p class="poem-line" style="animation-delay: 5.4s">
+                    Хамгийн үнэтэй зүйлсийг нэрлэхгүй ээ.
+                </p>
+                <p class="poem-line" style="animation-delay: 5.9s">
+                    Харин чиний дэргэд суух тэр мөчийг
+                </p>
+                <p class="poem-line" style="animation-delay: 6.4s">
+                    Хамаг амьдралынхаа жаргал гэж хэлнэ ээ.
+                </p>
+            </div>
+
+            <p class="poem-ending">
+                Чи минь — миний хамгийн нандин мэдрэмж. ❤️
+            </p>
+
+            <p class="chat-message">
+                💌 Сэтгэгдлээ чатаар явуулаарай 💌
+            </p>
+
+            <div class="footer-hearts">♡ ✧ ♡</div>
+        </article>
+    `;
+
+    document.body.appendChild(poemScreen);
+
+    // Зөөлөн хөвөх зүрхнүүд.
+    const symbols = ["♡", "♥", "❤", "💕", "✧"];
+    const colors = ["#d76d91", "#e89ab3", "#c45c80", "#f0afc3"];
+
+    heartInterval = setInterval(() => {
+        if (!document.getElementById("poemScreen")) {
+            clearInterval(heartInterval);
+            return;
+        }
+
+        const heart = document.createElement("span");
+        heart.className = "floating-heart";
+
+        heart.textContent =
+            symbols[Math.floor(Math.random() * symbols.length)];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (15 + Math.random() * 19) + "px";
+        heart.style.color =
+            colors[Math.floor(Math.random() * colors.length)];
+
+        const duration = 7 + Math.random() * 5;
+        heart.style.animationDuration = duration + "s";
+
+        poemScreen.appendChild(heart);
+
+        setTimeout(() => heart.remove(), duration * 1000);
+    }, 500);
+}
+</script>
+
+</body>
+</html>
